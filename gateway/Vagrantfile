@@ -1,6 +1,7 @@
 Vagrant.configure("2") do |config|
 
   config.vm.box = "geerlingguy/ubuntu1604"
+  config.vm.network :private_network, ip: '192.168.49.49'
 
   config.vm.provider :virtualbox do |vb|
       vb.memory = 2048
@@ -13,18 +14,25 @@ Vagrant.configure("2") do |config|
   # See https://github.com/mitchellh/vagrant/issues/5005
   config.ssh.insert_key = false
 
-  # First, install python
-  config.vm.provision "shell" do |s|
-    s.inline = "apt-get install -y python"
-  end
-
 
   #
   # Then run Ansible from the Vagrant Host
   #
   config.vm.provision "ansible" do |ansible|
     ansible.verbose = "v"
+    ansible.raw_arguments = [ '--diff' ]
+
     ansible.playbook = "playbook.yml"
+    ansible.sudo_user = 'root'
+    ansible.sudo = true
+
+    ansible.groups = {
+      'frontend'   => [ 'default' ],
+      'vagrant'    => [ 'default' ],    #
+    }
+
+    if ENV['ANSIBLE_TAGS'] then ansible.tags = ENV['ANSIBLE_TAGS']; end
+
   end
 
 end

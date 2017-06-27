@@ -1,5 +1,6 @@
-- hosts: all
+- name: Setup frontend hosts
+  hosts: frontend
+  roles:
+    - role: geerlingguy.nginx
+      tags: nginx
 
-  tasks:
-   - debug:
-      msg: Test of Ansible Playbook!
