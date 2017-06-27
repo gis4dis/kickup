@@ -1,4 +1,4 @@
-nginx_ppa_use: false
+nginx_ppa_use: true # use nginx upstream version
 nginx_client_max_body_size: "64m"
 nginx_remove_default_vhost: true
 
