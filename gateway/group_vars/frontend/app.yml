@@ -1,0 +1,9 @@
+nginx_upstreams:
+  - name: '@poster-app'
+    servers:
+        - unix:///run/poster-app/.sock
+        - "127.0.0.1:5001"
+  - name: '@stats-app'
+    servers:
+        - unix:///run/stats-app/.sock
+        - "127.0.0.1:5002"
