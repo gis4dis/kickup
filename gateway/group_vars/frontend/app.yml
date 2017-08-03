@@ -13,7 +13,10 @@ uwsgi_apps:
    unit_name: uwsgi-poster
    user: poster-app
    app_root: /opt/poster-app
+   src_root: /opt/poster-app/src
+   module: wsgi:application
+   plugin: python3
+   python_version_exec: python3
    socket: /run/poster-app/uwsgi.socket
    workers: 2
    requirements: "# dummy requirements "
-
