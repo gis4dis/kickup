@@ -1,5 +1,6 @@
 .idea/
 gateway/group_vars/production/*
+processing/group_vars/production/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
