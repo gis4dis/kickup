@@ -45,6 +45,7 @@ sudo apt-get install ansible
 ```
 
 ### testing server inventory file
+Edit `/etc/ansible/hosts` on machine
 ```
 [frontend]
 <hostname>          ansible_connection=local
@@ -52,6 +53,7 @@ sudo apt-get install ansible
 [testing]
 <hostname>
 ```
+### check group_vars for testing
 
 ### ansible playbook dry run
 `ansible-playbook -C -D ./playbook.yml -v`

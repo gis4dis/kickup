@@ -1,0 +1,58 @@
+---
+- name: "Create <{{ _uwsgi_app.name }}> user"
+  user:
+    name: "{{ _uwsgi_app.user }}"
+    home: "{{ _uwsgi_app.app_root }}"
+
+- set_fact:
+    _uwsgi_virtualenv: '{{ _uwsgi_app.app_root }}/virtualenv'
+    _uwsgi_activate: '{{ _uwsgi_app.app_root }}/virtualenv/bin/activate'
+
+- name: "Create virtualenv for <{{ _uwsgi_app.name }}>"
+  become_user: '{{ _uwsgi_app.user }}'
+  shell: "virtualenv --python={{ _uwsgi_app.python_version_exec }} {{ _uwsgi_app.app_root }}/virtualenv"
+  args:
+    creates: '{{ _uwsgi_app.app_root }}/virtualenv/bin/python'
+
+- name: "Create requirements.txt on <{{ _uwsgi_app.name }}>"
+  copy:
+    content: |
+        # Managed by ansible. Please don't touch.
+        {{ _uwsgi_app.requirements|default('') }}
+    dest: "{{ _uwsgi_app.app_root }}/requirements-extra.txt"
+    owner: '{{ _uwsgi_app.user }}'
+    force: no  # don't overwrite
+  register: _pip_requirements
+
+- name: Create src dir
+  file:
+    path: '{{ _uwsgi_app.app_root }}/src'
+    state: directory
+    owner: '{{ _uwsgi_app.user }}'
+
+- name: "Compile requirements"
+  shell: '{{ _uwsgi_virtualenv }}/bin/pip install -r requirements-extra.txt'
+  args:
+    chdir: '{{ _uwsgi_app.app_root }}'
+  become_user: '{{ _uwsgi_app.user }}'
+  when: _pip_requirements|changed
+
+- name: Add virtualenv to login script
+  become_user: '{{ _uwsgi_app.user }}'
+  lineinfile:
+    dest: '{{ _uwsgi_app.app_root }}/.bashrc'
+    line: "if [ -f {{ _uwsgi_activate }} ]; then VIRTUAL_ENV_DISABLE_PROMPT=1; . {{ _uwsgi_activate }}; fi"
+    state: present
+
+- name: "Create shell script <{{ _uwsgi_app.name }}> for Celery"
+  template:
+    src: celery-script.j2
+    dest: '{{ _uwsgi_app.app_root }}/celery.sh'
+    mode: a+x
+
+- name: "Create systemd units <{{ _uwsgi_app.name }}> for Celery"
+  template:
+    src: celery-service.j2
+    dest: '/etc/systemd/system/celery-{{ _uwsgi_app.name }}.service'
+    owner: root
+  notify: reload systemd units

@@ -1,13 +1,3 @@
-nginx_upstreams:
-  - name: '@poster-app'
-    servers:
-        - unix:///run/poster-app/uwsgi.socket
-        - "127.0.0.1:5001"
-  - name: '@stats-app'
-    servers:
-        - unix:///run/stats-app/uwsgi.socket
-        - "127.0.0.1:5002"
-
 uwsgi_apps:
  - name: poster-app
    unit_name: uwsgi-poster

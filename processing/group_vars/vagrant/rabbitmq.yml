@@ -1,0 +1,4 @@
+rabbitmq_users:
+- user: admin
+  password: admin
+  tags: administrator

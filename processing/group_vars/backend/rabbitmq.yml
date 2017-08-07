@@ -1,0 +1,11 @@
+rabbitmq_users_absent:
+- guest
+
+rabbitmq_vhosts:
+- /processing
+
+rabbitmq_vhosts_absent:
+- /vhost
+
+rabbitmq_plugins:
+- rabbitmq_management

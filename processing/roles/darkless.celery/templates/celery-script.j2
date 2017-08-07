@@ -1,0 +1,3 @@
+#!/bin/bash -
+source {{ _uwsgi_activate }}
+celery -A poster worker -l info -n frontend-worker1@%h

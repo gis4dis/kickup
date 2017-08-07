@@ -1,0 +1,7 @@
+- name: Setup backend hosts
+  hosts: backend
+  roles:
+    - role: jasonroyle.rabbitmq
+      tags: rabbitmq
+    - role: darkless.celery
+      tags: celery

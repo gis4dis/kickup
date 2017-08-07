@@ -1,0 +1,21 @@
+# {{  ansible_managed }}
+# Do not change!
+[Unit]
+Description={{ _uwsgi_app.name }} Celery worker
+After=syslog.target
+
+[Service]
+EnvironmentFile=-{{ _uwsgi_app.app_root }}/{{ _uwsgi_app.name }}-celery.env
+WorkingDirectory={{ _uwsgi_app.src_root }}
+ExecStart={{ _uwsgi_app.app_root }}/celery.sh
+
+User={{ _uwsgi_app.user }}
+Group={{ _uwsgi_app.user }}
+Restart=always
+KillSignal=SIGQUIT
+Type=notify
+StandardError=syslog
+NotifyAccess=all
+
+[Install]
+WantedBy=multi-user.target
