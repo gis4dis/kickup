@@ -53,7 +53,7 @@ Edit `/etc/ansible/hosts` on machine
 [testing]
 <hostname>
 ```
-### check group_vars for testing
+### set group_vars for testing
 
 ### ansible playbook dry run
 `ansible-playbook -C -D ./playbook.yml -v`
