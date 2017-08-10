@@ -26,17 +26,21 @@ cd kickup
 git submodule update --init --recursive
 ```
 
+### vagrant plugins
+There is one vagrant plugin used for binding mounts after provisioning, thus it is needed to be installed:
+
+`vagrant plugin install vagrant-bindfs`
+
 ### vagrant up
 
-Then you can just type `vagrant up` and it will kick up basic machine with
-Nginx as webserver and uwsgi for backend server.
+Then you can just cd into folder you want to start and type `vagrant up`
+That will kick up selected machine with provisioning run.
 
+Eg.:
 ```
 cd gateway
 vagrant up
 ```
-
-It will also prepare "dummy" wsgi application placeholders defined in `gateway/group_vars/frontend/app.yml` under `uwsgi_apps` key.
 
 ### instalation of ansible on ubuntu/xenial
 ```
@@ -46,8 +50,10 @@ sudo apt-get update
 sudo apt-get install ansible
 ```
 
+## Useful tips
+
 ### testing server inventory file
-Edit `/etc/ansible/hosts` on machine
+Edit `/etc/ansible/hosts` on target prod machine
 ```
 [frontend]
 <hostname>          ansible_connection=local

@@ -15,29 +15,19 @@ Vagrant.configure("2") do |config|
   # See https://github.com/mitchellh/vagrant/issues/5005
   config.ssh.insert_key = false
 
+  # See https://github.com/mitchellh/vagrant/issues/936#issuecomment-7179034
+  config.vm.synced_folder "../poster/", "/opt/poster-app/poster", id: "project_root",
+    owner: "vagrant", group: "vagrant", mount_options: ["dmode=777,fmode=666"]
+
+  config.vm.synced_folder "../poster/src", "/opt/poster-app/src", id: "source_root",
+    owner: "vagrant", group: "vagrant", mount_options: ["dmode=777,fmode=666"]
+
 
   # Uncomment lines below for faster installation - change mirrors and preinstall
   # config.vm.provision "shell",
   #   inline: "sudo sed -i 's|http://us.archive|http://archive|g' /etc/apt/sources.list;
   #   # inline: "sudo sed -i 's|http://us.archive.ubuntu.com/ubuntu/|mirror://mirrors.ubuntu.com/mirrors.txt|g' /etc/apt/sources.list;
   #   cat /etc/apt/sources.list; sudo apt-get clean; sudo apt-get update; apt-get install python-pip python3-pip python-virtualenv python3-virtualenv -y"
-
-  # See https://github.com/mitchellh/vagrant/issues/936#issuecomment-7179034
-
-  config.vm.synced_folder "../poster/", "/mnt/project_root", id: "project_root",
-    owner: "poster-app", group: "poster-app", mount_options: ["dmode=775,fmode=664"]
-
-  config.vm.synced_folder "../poster/src", "/mnt/source_root", id: "source_root",
-    owner: "poster-app", group: "poster-app", mount_options: ["dmode=775,fmode=664"]
-
-  config.bindfs.default_options = {
-    force_user:   'poster-app',
-    force_group:  'poster-app',
-    perms:        'u=rwX:g=rwX:o=rD'
-  }
-  config.bindfs.bind_folder "/mnt/project_root", "/opt/poster-app/poster", after: :provision
-  config.bindfs.bind_folder "/mnt/source_root", "/opt/poster-app/src", after: :provision
-
 
   #
   # Then run Ansible from the Vagrant Host
@@ -58,8 +48,5 @@ Vagrant.configure("2") do |config|
     if ENV['ANSIBLE_TAGS'] then ansible.tags = ENV['ANSIBLE_TAGS']; end
 
   end
-
-  config.vm.provision "shell",
-    inline: "rm /opt/poster-app/poster -rf; rm /opt/poster-app/src -rf"
 
 end
