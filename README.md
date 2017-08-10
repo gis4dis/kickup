@@ -5,6 +5,8 @@ This repository uses vagrant for local development. So you need to install vagra
 
 See more at: https://www.vagrantup.com/docs/installation/
 
+You also need to have Ansible installed on the host machine, see: http://docs.ansible.com/ansible/latest/intro_installation.html
+
 
 ## Installation
 
