@@ -16,3 +16,6 @@
 [submodule "processing/roles/jasonroyle.rabbitmq"]
 	path = processing/roles/jasonroyle.rabbitmq
 	url = https://github.com/jasonroyle/ansible-role-rabbitmq.git
+[submodule "poster"]
+	path = poster
+	url = https://github.com/gis4dis/poster

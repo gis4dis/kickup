@@ -10,3 +10,8 @@
     - role: geerlingguy.postgresql
       become: yes
       tags: postgres
+
+- name: Setup vagrant hosts
+  hosts: vagrant
+  roles:
+    - role: darkless.poster-vagrant
