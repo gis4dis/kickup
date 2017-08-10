@@ -24,3 +24,21 @@
     dest: '{{ _uwsgi_app.app_root }}/uwsgi.ini'
     line: "python-autoreload = 1"
     state: present
+
+- name: Remove wsgi entrypoint
+  file:
+    state: absent
+    path: "{{ _uwsgi_app.app_root }}/src/wsgi.py"
+
+- name: Link wsgi entrypoint
+  file:
+    src: "{{ _uwsgi_app.app_root }}/src/poster/wsgi.py"
+    dest: "{{ _uwsgi_app.app_root }}/src/wsgi.py"
+    state: link
+
+- name: "Create version.py for reload"
+  file:
+    path: "{{ _uwsgi_app.app_root }}/version.py"
+    state: touch
+    owner: "{{ _uwsgi_app.user }}"
+    group: "{{ _uwsgi_app.user }}"
