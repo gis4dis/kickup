@@ -5,3 +5,8 @@
       tags: rabbitmq
     - role: darkless.celery
       tags: celery
+
+- name: Setup vagrant hosts
+  hosts: vagrant
+  roles:
+    - role: darkless.poster-vagrant

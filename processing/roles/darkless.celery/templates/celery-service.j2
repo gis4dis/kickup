@@ -8,6 +8,7 @@ After=syslog.target
 EnvironmentFile=-{{ _uwsgi_app.app_root }}/{{ _uwsgi_app.name }}-celery.env
 WorkingDirectory={{ _uwsgi_app.src_root }}
 ExecStart={{ _uwsgi_app.app_root }}/celery.sh
+#ExecStart={{ _uwsgi_app.app_root }}/virtualenv/bin/celery worker -A poster -l info -n frontend-worker1@%h
 
 User={{ _uwsgi_app.user }}
 Group={{ _uwsgi_app.user }}

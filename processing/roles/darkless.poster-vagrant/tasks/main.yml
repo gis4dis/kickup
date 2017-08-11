@@ -1,0 +1,9 @@
+---
+- name: Test vagrant
+  shell: echo "YES"
+
+- name: Setup uwsgi apps
+  include: one-app.yml
+  with_items: '{{ uwsgi_apps }}'
+  loop_control:
+    loop_var: _uwsgi_app

@@ -8,6 +8,13 @@
     _uwsgi_virtualenv: '{{ _uwsgi_app.app_root }}/virtualenv'
     _uwsgi_activate: '{{ _uwsgi_app.app_root }}/virtualenv/bin/activate'
 
+- name: Ensure directories have correct owner
+  file:
+    dest: '{{ _uwsgi_app.app_root }}'
+    owner: '{{ _uwsgi_app.user }}'
+    group: '{{ _uwsgi_app.user }}'
+    recurse: 'yes'
+
 - name: "Create virtualenv for <{{ _uwsgi_app.name }}>"
   become_user: '{{ _uwsgi_app.user }}'
   shell: "virtualenv --python={{ _uwsgi_app.python_version_exec }} {{ _uwsgi_app.app_root }}/virtualenv"
@@ -43,6 +50,7 @@
     dest: '{{ _uwsgi_app.app_root }}/.bashrc'
     line: "if [ -f {{ _uwsgi_activate }} ]; then VIRTUAL_ENV_DISABLE_PROMPT=1; . {{ _uwsgi_activate }}; fi"
     state: present
+    create: yes
 
 - name: "Create shell script <{{ _uwsgi_app.name }}> for Celery"
   template:
