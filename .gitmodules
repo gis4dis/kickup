@@ -18,4 +18,4 @@
 	url = https://github.com/jasonroyle/ansible-role-rabbitmq.git
 [submodule "poster"]
 	path = poster
-	url = https://github.com/gis4dis/poster
+	url = git@github.com:gis4dis/poster.git
