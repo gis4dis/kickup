@@ -2,4 +2,4 @@ rabbitmq_users:
 - user: admin
   password: admin
   tags: administrator
-  vhost: /processing
+  vhost: '{{ processing.vhost }}'

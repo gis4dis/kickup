@@ -20,15 +20,15 @@ ADMINS = [('John', 'john@example.com'), ('Mary', 'mary@example.com')]
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'gateway_db',
-        'USER': 'gateway_user',
-        'PASSWORD': 'supersecure',
+        'NAME': '{{postgresql_users.0.db}}',
+        'USER': '{{postgresql_users.0.name}}',
+        'PASSWORD': '{{postgresql_users.0.password}}',
         'HOST': '192.168.49.49',
         'PORT': '5432',
     }
 }
 
-CELERY_BROKER_URL = 'amqp://admin:admin@192.168.49.50:5672//processing'
+CELERY_BROKER_URL = 'amqp://admin:admin@192.168.49.50:5672/{{ processing.vhost }}'
 # CELERY_RESULT_BACKEND = 'redis://localhost:6379'
 
 

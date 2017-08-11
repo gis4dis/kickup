@@ -16,3 +16,6 @@ postgresql_locales:
 
 postgresql_databases:
   - name: gateway_db
+
+processing:
+   vhost: '/processing'

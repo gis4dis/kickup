@@ -2,7 +2,7 @@ rabbitmq_users_absent:
 - guest
 
 rabbitmq_vhosts:
-- /processing
+- '{{ processing.vhost }}'
 
 rabbitmq_vhosts_absent:
 - /vhost

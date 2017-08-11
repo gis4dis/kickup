@@ -26,15 +26,12 @@ cd kickup
 git submodule update --init --recursive
 ```
 
-### vagrant plugins
-There is one vagrant plugin used for binding mounts after provisioning, thus it is needed to be installed:
-
-`vagrant plugin install vagrant-bindfs`
-
 ### vagrant up
 
 Then you can just cd into folder you want to start and type `vagrant up`
 That will kick up selected machine with provisioning run.
+
+Machines currently are: gateway, processing
 
 Eg.:
 ```

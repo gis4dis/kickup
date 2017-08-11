@@ -29,12 +29,14 @@
   file:
     state: absent
     path: "{{ _uwsgi_app.app_root }}/src/wsgi.py"
+  ignore_errors: yes
 
 - name: Link wsgi entrypoint
   file:
     src: "{{ _uwsgi_app.app_root }}/src/poster/wsgi.py"
     dest: "{{ _uwsgi_app.app_root }}/src/wsgi.py"
     state: link
+    force: yes
 
 - name: "Create version.py for reload"
   file:
