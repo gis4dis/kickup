@@ -115,6 +115,10 @@ git submodule update --init --recursive
   notify: reload systemd units
 ```
 
+### Configure poster
+
+[Configure `local_settings.py`](https://github.com/gis4dis/poster/blob/master/README.md#3-configure-local_settingspy) in `poster/src/poster` folder.
+
 ### Run machines
 
 Then you can just cd into folder you want to start and type `vagrant up`
