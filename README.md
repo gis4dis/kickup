@@ -1,11 +1,16 @@
 # kickup
 Automatized installation of servers for gis4dis infrastructure.
 
-This repository uses vagrant for local development. So you need to install vagrant with a provider such as virtualbox.
 
-See more at: https://www.vagrantup.com/docs/installation/
+## Requirements
+- [vagrant](https://www.vagrantup.com/docs/installation/)
+   - Ubuntu: Version 1.9.7 had a problem with running `rsync-auto` that is almost necessary for development. Version 1.9.5 seems to work correctly.
+- [virtualbox](https://www.virtualbox.org/wiki/Downloads)
+   - Ubuntu: `sudo apt-get install virtualbox`. If you encounter message `Your system has UEFI Secure Boot enabled.`, [this manual](https://stegard.net/2016/10/virtualbox-secure-boot-ubuntu-fail/) can help you.
+- [ansible](http://docs.ansible.com/ansible/latest/intro_installation.html)
 
-You also need to have Ansible installed on the host machine, see: http://docs.ansible.com/ansible/latest/intro_installation.html
+### Recommended
+- [git](https://git-scm.com/downloads) + account at [github](https://github.com/join)
 
 
 ## Installation
@@ -37,14 +42,6 @@ Eg.:
 ```
 cd gateway
 vagrant up
-```
-
-### instalation of ansible on ubuntu/xenial
-```
-sudo apt-get install software-properties-common
-sudo apt-add-repository ppa:ansible/ansible
-sudo apt-get update
-sudo apt-get install ansible
 ```
 
 ## Useful tips
