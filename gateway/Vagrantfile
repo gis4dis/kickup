@@ -16,8 +16,8 @@ Vagrant.configure("2") do |config|
   config.ssh.insert_key = false
 
   # See https://github.com/mitchellh/vagrant/issues/936#issuecomment-7179034
-  config.vm.synced_folder "../poster/", "/opt/poster-app/poster", id: "project_root", type: "rsync"
-  #   # owner: "vagrant", group: "vagrant", mount_options: ["dmode=777,fmode=666"]
+  config.vm.synced_folder "../poster/", "/opt/poster-app/poster", id: "project_root",
+    owner: "vagrant", group: "vagrant"
 
   config.vm.synced_folder "../poster/src", "/opt/poster-app/src", id: "source_root", type: "rsync", rsync__exclude: "/wsgi.py"
     # owner: "vagrant", group: "vagrant", mount_options: ["dmode=777,fmode=666"]

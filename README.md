@@ -136,6 +136,14 @@ vagrant up
 
 ## Useful tips
 
+### Make and sync migrations
+Run under `vagrant` user:
+```
+source /opt/poster-app/virtualenv/bin/activate
+cd /opt/poster-app/poster/src
+python manage.py makemigrations
+```
+
 ### testing server inventory file
 Edit `/etc/ansible/hosts` on target prod machine
 ```
