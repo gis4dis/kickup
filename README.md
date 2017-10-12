@@ -60,6 +60,12 @@ http://192.168.49.49/admin/
 ## Useful tips
 
 ### Make and sync migrations
+Connect to vagrant:
+```
+cd gateway
+vagrant ssh
+```
+
 Run under `vagrant` user:
 ```
 source /opt/poster-app/virtualenv/bin/activate
