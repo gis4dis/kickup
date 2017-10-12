@@ -59,6 +59,12 @@ http://192.168.49.49/admin/
 
 ## Useful tips
 
+### Run `rsync` during development
+```
+cd gateway
+vagrant rsync-auto
+```
+
 ### Make and sync migrations
 Connect to vagrant:
 ```
