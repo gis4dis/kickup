@@ -32,88 +32,7 @@ git submodule update --init --recursive
 ```
 
 ### Edit `gateway/roles/verosk.uwsgi-app/tasks/one-app.yml`
-```yaml
----
-- name: "Create <{{ _uwsgi_app.name }}> user"
-  user:
-    name: "{{ _uwsgi_app.user }}"
-    home: "{{ _uwsgi_app.app_root }}"
-
-- set_fact:
-    _uwsgi_virtualenv: '{{ _uwsgi_app.app_root }}/virtualenv'
-    _uwsgi_activate: '{{ _uwsgi_app.app_root }}/virtualenv/bin/activate'
-
-- name: Ensure directories have correct owner
-  file:
-    dest: "{{ _uwsgi_app.app_root }}"
-    owner: "{{ _uwsgi_app.user }}"
-    group: "{{ _uwsgi_app.user }}"
-    recurse: "yes"
-
-- name: "Create uwsgi.ini for <{{ _uwsgi_app.name }}>"
-  template:
-    src: uwsgi-ini.j2
-    dest: '{{ _uwsgi_app.app_root }}/uwsgi.ini'
-    owner: root
-
-- name: "Create virtualenv for <{{ _uwsgi_app.name }}>"
-  become_user: '{{ _uwsgi_app.user }}'
-  shell: "virtualenv --python={{ _uwsgi_app.python_version_exec }} {{ _uwsgi_app.app_root }}/virtualenv"
-  args:
-    creates: '{{ _uwsgi_app.app_root }}/virtualenv/bin/python'
-
-- name: "Create requirements.txt on <{{ _uwsgi_app.name }}>"
-  copy:
-    content: |
-        # Managed by ansible. Please don't touch.
-        {{ _uwsgi_app.requirements|default('') }}
-    dest: "{{ _uwsgi_app.app_root }}/requirements-extra.txt"
-    owner: '{{ _uwsgi_app.user }}'
-    force: no  # don't overwrite
-  register: _pip_requirements
-
-- name: Create src dir
-  file:
-    path: '{{ _uwsgi_app.app_root }}/src'
-    state: directory
-    owner: '{{ _uwsgi_app.user }}'
-
-- name: Upload wsgi entrypoint
-  template:
-    src: hello.py.j2
-    dest: '{{ _uwsgi_app.app_root }}/src/wsgi.py'
-    owner: '{{ _uwsgi_app.user }}'
-    force: no   # don't overwrite
-
-- name: "Compile requirements"
-  shell: '{{ _uwsgi_virtualenv }}/bin/pip install -r requirements-extra.txt'
-  args:
-    chdir: '{{ _uwsgi_app.app_root }}'
-  become_user: '{{ _uwsgi_app.user }}'
-  when: _pip_requirements|changed
-
-- name: Add virtualenv to login script
-  become_user: '{{ _uwsgi_app.user }}'
-  lineinfile:
-    dest: '{{ _uwsgi_app.app_root }}/.bashrc'
-    line: "if [ -f {{ _uwsgi_activate }} ]; then VIRTUAL_ENV_DISABLE_PROMPT=1; . {{ _uwsgi_activate }}; fi"
-    state: present
-    create: yes
-
-- name: "Create uwsgi sockets in /run/<{{ _uwsgi_app.name }}>"
-  template:
-    src: uwsgi-tmpdir.j2
-    dest: '/etc/tmpfiles.d/uwsgi-{{ _uwsgi_app.name }}.conf'
-    owner: root
-  notify: update tmpfiles
-
-- name: "Create systemd units <{{ _uwsgi_app.name }}>"
-  template:
-    src: uwsgi-service.j2
-    dest: '/etc/systemd/system/uwsgi-{{ _uwsgi_app.name }}.service'
-    owner: root
-  notify: reload systemd units
-```
+According to https://github.com/VerosK/ansible-uwsgi-app/pull/2/files
 
 ### Configure poster
 
@@ -133,6 +52,10 @@ Eg.:
 cd gateway
 vagrant up
 ```
+
+### Open application
+http://192.168.49.49/admin/
+
 
 ## Useful tips
 
