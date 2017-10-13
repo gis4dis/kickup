@@ -65,6 +65,15 @@ cd gateway
 vagrant rsync-auto
 ```
 
+## Tunnel DB
+You can use ssh tunnels to connect to remote db via ssh (Postgres SSH tunnel has some issues)
+```
+ssh -L 3333:localhost:5432 user@your.db.server
+```
+This will connect to ssh on your.db.server and then make tunnel from (server's)localhost:5432 to 3333 on (machine's)localhost. Resulting in having remote postgres "mounted" on your locahost:3333.
+
+Now you can connect to localhost:3333
+
 ### Make and sync migrations
 Connect to vagrant:
 ```
