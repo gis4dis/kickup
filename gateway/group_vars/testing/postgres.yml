@@ -14,3 +14,9 @@ postgresql_users:
   - name: gateway_user
     db: gateway_db
     password: supersecure
+    
+postgresql_packages:
+  - postgresql
+  - postgresql-contrib
+  - libpq-dev
+  - postgis
