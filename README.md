@@ -31,9 +31,6 @@ cd kickup
 git submodule update --init --recursive
 ```
 
-### Edit `gateway/roles/verosk.uwsgi-app/tasks/one-app.yml`
-According to https://github.com/VerosK/ansible-uwsgi-app/pull/2/files
-
 ### Configure poster
 
 [Configure `local_settings.py`](https://github.com/gis4dis/poster/blob/master/README.md#3-configure-local_settingspy) in `poster/src/poster` folder.
