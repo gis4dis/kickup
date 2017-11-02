@@ -2,6 +2,11 @@
 Automatized installation of servers for gis4dis infrastructure.
 
 
+## Operating system
+Linux is highly recommended. This devstack is neither used nor tested under Windows.
+
+If you are using Windows, consider installing Linux (e.g. Ubuntu) as dual boot. Disk volume with 50 -- 70 GB should be enough for Linux and this devstack.
+
 ## Requirements
 - [vagrant](https://www.vagrantup.com/docs/installation/)
    - Ubuntu: Version 1.9.7 had a problem with running `rsync-auto` that is almost necessary for development. Version 1.9.5 seems to work correctly.
