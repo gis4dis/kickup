@@ -9,7 +9,6 @@ If you are using Windows, consider installing Linux (e.g. Ubuntu) as dual boot. 
 
 ## Requirements
 - [vagrant 2.0.1+](https://www.vagrantup.com/docs/installation/)
-   - Ubuntu: Version 1.9.7 had a problem with running `rsync-auto` that is almost necessary for development. Version 1.9.5 seems to work correctly.
 - [virtualbox 5.2](https://www.virtualbox.org/wiki/Downloads)
    - Ubuntu
      - http://ubuntuhandbook.org/index.php/2017/10/virtualbox-reached-5-2-major-release-how-to-install/
