@@ -8,10 +8,16 @@ Linux is highly recommended. This devstack is neither used nor tested under Wind
 If you are using Windows, consider installing Linux (e.g. Ubuntu) as dual boot. Disk volume with 50 -- 70 GB should be enough for Linux and this devstack.
 
 ## Requirements
-- [vagrant](https://www.vagrantup.com/docs/installation/)
+- [vagrant 2.0.1+](https://www.vagrantup.com/docs/installation/)
    - Ubuntu: Version 1.9.7 had a problem with running `rsync-auto` that is almost necessary for development. Version 1.9.5 seems to work correctly.
-- [virtualbox](https://www.virtualbox.org/wiki/Downloads)
-   - Ubuntu: `sudo apt-get install virtualbox`. If you encounter message `Your system has UEFI Secure Boot enabled.`, [this manual](https://stegard.net/2016/10/virtualbox-secure-boot-ubuntu-fail/) can help you.
+- [virtualbox 5.2](https://www.virtualbox.org/wiki/Downloads)
+   - Ubuntu
+     - http://ubuntuhandbook.org/index.php/2017/10/virtualbox-reached-5-2-major-release-how-to-install/
+     - Uninstall `virtualbox-dkms` before installation:
+     ```
+     sudo apt-get remove --auto-remove virtualbox-dkms
+     ```
+     - If you encounter message `Your system has UEFI Secure Boot enabled.`, [this manual](https://stegard.net/2016/10/virtualbox-secure-boot-ubuntu-fail/) can help you.
 - [ansible](http://docs.ansible.com/ansible/latest/intro_installation.html)
 
 ### Recommended
