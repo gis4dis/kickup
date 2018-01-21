@@ -1,6 +1,10 @@
 ---
+- set_fact:
+    _uwsgi_virtualenv: '{{ _uwsgi_app.app_root }}/virtualenv'
+    _uwsgi_activate: '{{ _uwsgi_app.app_root }}/virtualenv/bin/activate'
+
 - name: "Compile requirements"
-  shell: '{{ _uwsgi_virtualenv }}/bin/pip install -r /opt/poster-app/src/requirements.txt'
+  shell: '{{ _uwsgi_virtualenv }}/bin/pip install -r {{ _uwsgi_app.app_root }}/src/requirements.txt'
   args:
     chdir: '{{ _uwsgi_app.app_root }}'
   become_user: '{{ _uwsgi_app.user }}'

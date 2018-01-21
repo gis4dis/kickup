@@ -1,22 +1,28 @@
 # {{  ansible_managed }}
 # Do not change!
 [Unit]
-Description={{ _uwsgi_app.name }} Celery worker
-After=syslog.target
+Description=Celery Service
+After=network.target
 
 [Service]
-EnvironmentFile=-{{ _uwsgi_app.app_root }}/{{ _uwsgi_app.name }}-celery.env
-WorkingDirectory={{ _uwsgi_app.src_root }}
-ExecStart={{ _uwsgi_app.app_root }}/celery.sh
-#ExecStart={{ _uwsgi_app.app_root }}/virtualenv/bin/celery worker -A poster -l info -n frontend-worker1@%h
-
+Type=forking
 User={{ _uwsgi_app.user }}
 Group={{ _uwsgi_app.user }}
-Restart=always
-KillSignal=SIGQUIT
-Type=notify
-StandardError=syslog
-NotifyAccess=all
+
+EnvironmentFile=-{{ _uwsgi_app.app_root }}/celery/{{ _uwsgi_app.name }}-celery.env
+WorkingDirectory={{ _uwsgi_app.src_root }}
+
+
+ExecStart=/bin/sh -c '${CELERY_BIN} multi start ${CELERYD_NODES} \
+  -A ${CELERY_APP} --pidfile=${CELERYD_PID_FILE} \
+  --logfile=${CELERYD_LOG_FILE} --loglevel=${CELERYD_LOG_LEVEL} ${CELERYD_OPTS}'
+
+ExecStop=/bin/sh -c '${CELERY_BIN} multi stopwait ${CELERYD_NODES} \
+  --pidfile=${CELERYD_PID_FILE}'
+
+ExecReload=/bin/sh -c '${CELERY_BIN} multi restart ${CELERYD_NODES} \
+  -A ${CELERY_APP} --pidfile=${CELERYD_PID_FILE} \
+  --logfile=${CELERYD_LOG_FILE} --loglevel=${CELERYD_LOG_LEVEL} ${CELERYD_OPTS}'
 
 [Install]
 WantedBy=multi-user.target

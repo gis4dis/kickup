@@ -1,7 +1,6 @@
 Vagrant.configure("2") do |config|
 
   config.vm.box = "geerlingguy/ubuntu1604"
-  # config.vm.box_version = "1.1.4"
   config.vm.network :private_network, ip: '192.168.49.49'
 
   config.vm.provider :virtualbox do |vb|
@@ -19,9 +18,8 @@ Vagrant.configure("2") do |config|
   config.vm.synced_folder "../poster/", "/opt/poster-app/poster", id: "project_root",
     owner: "vagrant", group: "vagrant"
 
-  config.vm.synced_folder "../poster/src", "/opt/poster-app/src", id: "source_root", type: "rsync", rsync__exclude: ["wsgi.py","local_settings.py",]
+  config.vm.synced_folder "../poster/src", "/opt/poster-app/src", id: "source_root", type: "rsync", rsync__exclude: ["/opt/poster-app/src/wsgi.py","local_settings.py",]
     # owner: "vagrant", group: "vagrant", mount_options: ["dmode=777,fmode=666"]
-
 
   # Uncomment lines below for faster installation - change mirrors and preinstall
   config.vm.provision "shell",

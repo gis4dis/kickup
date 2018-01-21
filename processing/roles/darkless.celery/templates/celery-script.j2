@@ -1,3 +1,4 @@
 #!/bin/bash -
 source {{ _uwsgi_activate }}
 celery -A poster worker -l info -n frontend-worker1@%h
+# celery multi start -A poster -l info -n frontend-worker1@%h --pidfile="$HOME/run/celery/%n.pid" --logfile="$HOME/log/celery/%n%I.log"
