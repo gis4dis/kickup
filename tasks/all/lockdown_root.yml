@@ -1,0 +1,30 @@
+---
+
+# Main user
+- name: Lock the root user (use 'sudo passwd root' to re-enable)
+  command: passwd -l root
+  when: not ansible_check_mode
+
+- name: Ensure public key is in authorized_keys
+  authorized_key:
+    key: "{{ item.key }}"
+    user: "root"
+  with_items: "{{ auth_public_keys }}"
+  when: not ansible_check_mode
+
+- name: Update ssh parameters
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    state: present
+    regexp: "^{{ item.key }}"
+    line: "{{ item.key }} {{ item.value }}"
+    insertafter: EOF
+  with_items:
+    - { key: 'Port', value: '{{ ssh_port | default("22") }}' }
+    - { key: 'PermitRootLogin', value: 'prohibit-password' }
+    - { key: 'PasswordAuthentication', value: 'no' }
+    - { key: 'LoginGraceTime', value: '20' }
+    - { key: 'X11Forwarding', value: 'no' }
+    - { key: 'AllowUsers', value: 'root' }
+  notify:
+    - restart ssh

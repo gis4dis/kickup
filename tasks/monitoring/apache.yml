@@ -1,0 +1,31 @@
+---
+- name: Install apache package
+  apt:
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+      - apache2
+      - libapache2-mod-wsgi
+      - apt-transport-https
+      - ssl-cert
+      - python-passlib
+
+- name: Disable apache default site
+  command: a2dissite 000-default
+
+- name: Copy graphite local_settings.py
+  template: src=templates/apache2-graphite.conf.j2 dest=/etc/apache2/sites-available/apache2-graphite.conf
+
+- htpasswd:
+    path: /etc/passwd_lp
+    name: '{{ graphite_web_user }}'
+    password: '{{ graphite_web_password }}'
+    owner: root
+    group: www-data
+    mode: 0640
+
+- name: Enable graphite site
+  command: a2ensite apache2-graphite
+  notify:
+    - restart apache

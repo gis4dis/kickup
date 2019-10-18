@@ -1,0 +1,49 @@
+---
+
+# to verify ufw configuration run:
+# sudo ufw status verbose
+
+- name: Install ufw
+  apt: package=ufw state=present
+
+- name: Configure ufw defaults
+  ufw: direction={{ item.direction }} policy={{ item.policy }}
+  with_items:
+    - { direction: 'incoming', policy: 'deny' }
+    - { direction: 'outgoing', policy: 'allow' }
+  notify:
+    - restart ufw
+
+- name: Configure basic SSH
+  ufw:
+    rule: limit
+    port: '{{ ssh_port | default("22") }}'
+    proto: tcp
+  notify:
+    - restart ufw
+
+- name: Configure Bakula inbound access
+  ufw:
+    rule: allow
+    from_ip: '{{ bakula_ip }}'
+    port: '{{ bakula_port_in }}'
+  notify:
+    - restart ufw
+
+- name: Configure Bakula outbound access
+  ufw:
+    rule: allow
+    direction: out
+    to_ip: '{{ bakula_ip }}'
+    port: '{{ bakula_port_out }}'
+    proto: tcp
+  notify:
+    - restart ufw
+
+- name: Enable ufw logging
+  ufw: logging=on
+  notify:
+    - restart ufw
+
+- name: Enable ufw
+  ufw: state=enabled

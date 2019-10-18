@@ -1,0 +1,32 @@
+timezone: 'Europe/Prague'
+#ssh_port: 22 # defaults to 22
+
+auth_public_keys:
+  - 'ssh-rsa <KEY>'
+
+fail2ban_admin_email: '<ADMIN_EMAIL>'
+
+# This will install dokku core plugin -
+# !!! you need to visit web browser address to finish the instalation
+# A bit of simplification hack
+dokku_install_core: True
+
+minio_user: 'minio-user'
+minio_storage_folder: '/storage/minio-storage'
+minio_access_key: <MINIO_ACCESS_KEY>
+minio_secret_key: <MINIO_STORAGE_KEY>
+
+graphite_host: <GRAPHITE_HOST>
+graphite_port: 2003 # default to 2003
+graphite_secrect_key: <GRAPHITE_SECRET_KEY>
+graphite_web_user: <GRAPHITE_WEB_USER>
+graphite_web_password: <GRAPHITE_WEB_PASSWORD>
+graphite_allow_ips:
+  - <IP FROM WHICH TO OBTAIN STATS>
+
+database_host: <POSTGIS_DB_HOST>
+database_user: <POSTGIS_DB_USER>
+
+bakula_ip: <BAKULA_IP> # Allow backups from this IP
+bakula_port_in: "<BAKULA_PORT_IN>"
+bakula_port_out: "<BAKULA_PORT_OUT_FROM>:<BAKULA_PORT_OUT_TO>" # port range

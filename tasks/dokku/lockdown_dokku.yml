@@ -1,0 +1,18 @@
+---
+
+- name: Include dokku ssh key add subtask
+  include_tasks: subtask_ssh_add_key.yml
+  with_items: "{{ auth_public_keys }}"
+  loop_control:
+    loop_var: auth_public_key
+
+
+- name: Add dokku to AllowUsers
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    state: present
+    regexp: "^AllowUsers"
+    line: 'AllowUsers root {{ dokku_user | default("dokku") }}'
+    insertafter: EOF
+  notify:
+    - restart ssh

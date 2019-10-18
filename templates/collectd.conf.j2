@@ -1,0 +1,51 @@
+###########################
+### Managed by ansible  ###
+### do not edit by hand ###
+###########################
+
+FQDNLookup true
+Interval 20
+LoadPlugin syslog
+<Plugin syslog>
+    LogLevel info
+</Plugin>
+LoadPlugin cpu
+LoadPlugin df
+LoadPlugin load
+LoadPlugin rrdtool
+LoadPlugin swap
+LoadPlugin write_graphite
+<Plugin df>
+    MountPoint "/"
+    MountPoint "/var"
+</Plugin>
+LoadPlugin table
+<Plugin table>
+    <Table "/proc/meminfo">
+        Instance "meminfo"
+        Separator ": "
+        <Result>
+            Type memory
+            InstancesFrom 0
+            ValuesFrom 1
+        </Result>
+    </Table>
+</Plugin>
+<Plugin rrdtool>
+    DataDir "/var/lib/collectd/rrd"
+</Plugin>
+<Plugin write_graphite>
+    <Node "graphite">
+        Host "{{ graphite_host }}"
+        Port "{{ graphite_port | default("2003") }}"
+        Protocol "tcp"
+        LogSendErrors true
+        Prefix "collectd_"
+        StoreRates true
+        AlwaysAppendDS false
+        EscapeCharacter "_"
+    </Node>
+</Plugin>
+<Include "/etc/collectd/collectd.conf.d">
+    Filter "*.conf"
+</Include>

@@ -1,0 +1,23 @@
+---
+
+- name: create temporary rsa.pub file
+  tempfile:
+    state: file
+    suffix: temp
+  register: temp_rsa
+
+- name: render key to tmp file
+  template:
+    src:  templates/rsa.pub.j2
+    dest: "{{ temp_rsa.path }}"
+
+- name: Use Dokku to add ssh key
+  command: dokku ssh-keys:add {{auth_public_key.name}} {{temp_rsa.path}}
+  register: result
+  failed_when: result.rc != 0 and "Duplicate SSH Key name" not in result.stderr
+
+- name: use the registered var and the file module to remove the temporary file
+  file:
+    path: "{{ temp_rsa.path }}"
+    state: absent
+  when: temp_rsa.path is defined

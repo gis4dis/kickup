@@ -1,0 +1,18 @@
+---
+
+- name: Ensures /backups directory
+  file:
+    path: /backups
+    state: directory
+
+- name: Copy Makefile
+  template: src=templates/Makefile-backup.j2 dest=/backups/Makefile
+
+- name: Ensure database backup every tuesday a 3AM
+  cron:
+    name: "database backup"
+    minute: "0"
+    hour: "3"
+    weekday: "2"
+    job: "make -f /backups/Makefile -C /backups database_backup"
+    state: present

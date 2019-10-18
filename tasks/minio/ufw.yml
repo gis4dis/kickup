@@ -1,0 +1,8 @@
+---
+- name: Configure minio port
+  ufw:
+    rule: allow
+    port: '9000'
+    proto: tcp
+  notify:
+    - restart ufw

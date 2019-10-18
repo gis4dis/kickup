@@ -1,0 +1,4 @@
+---
+
+- name: Secure shared memory
+  lineinfile: dest=/etc/fstab regexp="^tmpfs" line="tmpfs /run/shm tmpfs defaults,noexec,nosuid 0 0" state=present

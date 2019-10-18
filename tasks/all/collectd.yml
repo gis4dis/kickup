@@ -1,0 +1,15 @@
+---
+
+- name: Install prerequisite packages for Docker
+  apt:
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+      - collectd
+      - collectd-utils
+
+- name: Copy collectd default config
+  template: src=templates/collectd.conf.j2 dest=/etc/collectd/collectd.conf
+  notify:
+    - restart collectd

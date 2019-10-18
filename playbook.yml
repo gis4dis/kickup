@@ -1,0 +1,83 @@
+---
+################################################################################
+# Run as follows:
+# ansible-playbook -i hosts.yaml playbook.yml --ask-sudo-pass --check --diff
+################################################################################
+
+################################################################################
+- name: Global server configuration and hardening
+  hosts: all
+  become: yes
+  vars_files:
+    - vars/external_vars.yml
+  tasks:
+  - include: tasks/all/hostname.yml
+  - include: tasks/all/timezone.yml
+  - include: tasks/all/sysctl.yml
+  - include: tasks/all/system_updates.yml
+  - include: tasks/all/system_utilities.yml
+  - include: tasks/all/lockdown_root.yml
+  - include: tasks/all/fail2ban.yml
+  - include: tasks/all/ufw.yml
+  - include: tasks/all/secure_shared_memory.yml
+  - include: tasks/all/collectd.yml
+  handlers:
+  - include: handlers.yml
+
+################################################################################
+- name: Install dokku server(s)
+  hosts: dokku
+  become: yes
+  vars_files:
+    - vars/external_vars.yml
+  tasks:
+  - include: tasks/dokku/docker.yml
+  - include: tasks/dokku/dokku.yml
+  - include: tasks/dokku/lockdown_dokku.yml
+  - include: tasks/dokku/ufw.yml
+  handlers:
+  - include: handlers.yml
+
+################################################################################
+- name: Install minio server
+  hosts: minio
+  become: yes
+  vars_files:
+    - vars/external_vars.yml
+  tasks:
+  - include: tasks/minio/main.yml
+  - include: tasks/minio/ufw.yml
+  handlers:
+  - include: handlers.yml
+
+################################################################################
+- name: Install backup server
+  hosts: backup
+  become: yes
+  vars_files:
+    - vars/external_vars.yml
+  tasks:
+  - include: tasks/backup/main.yml
+
+################################################################################
+- name: Install graphite and graphana server
+  hosts: monitoring
+  become: yes
+  vars_files:
+    - vars/external_vars.yml
+  tasks:
+  - include: tasks/monitoring/graphite.yml
+  - include: tasks/monitoring/apache.yml
+  - include: tasks/monitoring/grafana.yml
+  - include: tasks/monitoring/ufw.yml
+  handlers:
+  - include: handlers.yml
+
+
+################################################################################
+# - name: Reboot all servers
+#   hosts: all
+#   become: yes
+#   tasks:
+#   - name: Reboot Server
+#     reboot:

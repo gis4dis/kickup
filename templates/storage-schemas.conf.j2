@@ -1,0 +1,18 @@
+###########################
+### Managed by ansible  ###
+### do not edit by hand ###
+###########################
+
+[carbon]
+pattern = ^carbon\.
+retentions = 60:90d
+
+
+[collectd]
+pattern = ^collectd.*
+retentions = 20s:1d,1m:7d,10m:1y
+
+
+[default_1min_for_1day]
+pattern = .*
+retentions = 60s:1d,5m:7d

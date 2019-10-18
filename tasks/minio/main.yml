@@ -1,0 +1,79 @@
+---
+
+- name: Create minio group
+  group:
+    name: '{{ minio_user }}'
+    state: present
+
+- name: Create minio user
+  user:
+    name: '{{ minio_user }}'
+    shell: /bin/bash
+    groups: '{{ minio_user }}'
+    state: present
+
+- name: Create storage directory
+  file:
+    dest: '{{ minio_storage_folder }}'
+    owner: '{{ minio_user }}'
+    group: '{{ minio_user }}'
+    mode: u=rwX,g=rwX,o=rX
+    recurse: yes
+
+- name: Set storage via ENV
+  lineinfile:
+    dest: /etc/default/minio
+    state: present
+    regexp: "^MINIO_VOLUMES="
+    line: 'MINIO_VOLUMES="{{ minio_storage_folder }}"'
+    insertafter: EOF
+    create: yes
+  notify:
+    - restart minio
+
+- name: Set ACCESS_KEY via ENV
+  lineinfile:
+    dest: /etc/default/minio
+    state: present
+    regexp: "^MINIO_ACCESS_KEY="
+    line: 'MINIO_ACCESS_KEY={{ minio_access_key }}'
+    insertafter: EOF
+    create: yes
+  notify:
+    - restart minio
+
+- name: Set SECRET_KEY via ENV
+  lineinfile:
+    dest: /etc/default/minio
+    state: present
+    regexp: "^MINIO_SECRET_KEY="
+    line: 'MINIO_SECRET_KEY={{ minio_secret_key }}'
+    insertafter: EOF
+    create: yes
+  notify:
+    - restart minio
+
+- name: Ensure that we can write to enough files
+  lineinfile:
+    dest: /etc/sysctl.conf
+    state: present
+    regexp: "^fs.file-max ="
+    line: 'fs.file-max = 100000'
+    insertafter: EOF
+
+- name: Download minio binary file with check (sha256)
+  get_url:
+    url: https://dl.minio.io/server/minio/release/linux-amd64/minio
+    dest: /usr/local/bin/minio
+    mode: 'u=rx,g=rx,o=r'
+    owner: '{{ minio_user }}'
+
+- name: Add minio.service file
+  template: src=templates/minio.service.j2 dest=/etc/systemd/system/minio.service
+
+- name: Enable minio service
+  service:
+    name: minio
+    enabled: yes
+  notify:
+    - restart minio

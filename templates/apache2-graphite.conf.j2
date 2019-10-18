@@ -1,0 +1,50 @@
+###########################
+### Managed by ansible  ###
+### do not edit by hand ###
+###########################
+<VirtualHost *:80>
+
+        WSGIDaemonProcess _graphite processes=5 threads=5 display-name='%{GROUP}' inactivity-timeout=120 user=_graphite group=_graphite
+        WSGIProcessGroup _graphite
+        WSGIImportScript /usr/share/graphite-web/graphite.wsgi process-group=_graphite application-group=%{GLOBAL}
+        WSGIScriptAlias / /usr/share/graphite-web/graphite.wsgi
+        <Location "/server-stats">
+          SetHandler server-status
+          Require all granted
+        </Location>
+
+        <Location "/">
+          require valid-user
+          order allow,deny
+          Allow from all
+          AuthType Basic
+          AuthName "Stats"
+          AuthBasicProvider file
+          AuthUserFile /etc/passwd_lp
+        </Location>
+
+        Alias /content/ /usr/share/graphite-web/static/
+        <Location "/content/">
+                SetHandler None
+        </Location>
+
+        Alias /static/ /usr/share/graphite-web/static/
+        <Directory /usr/share/graphite-web/static/>
+                <IfVersion < 2.4>
+                    Order deny,allow
+                    Allow from all
+                </IfVersion>
+                <IfVersion >= 2.4>
+                    Require all granted
+                </IfVersion>
+        </Directory>
+
+        ErrorLog ${APACHE_LOG_DIR}/graphite-web_error.log
+
+        # Possible values include: debug, info, notice, warn, error, crit,
+        # alert, emerg.
+        LogLevel warn
+
+        CustomLog ${APACHE_LOG_DIR}/graphite-web_access.log combined
+
+</VirtualHost>

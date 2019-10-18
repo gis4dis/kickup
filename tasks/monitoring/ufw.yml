@@ -1,0 +1,30 @@
+---
+- name: Configure basic HTTP
+  ufw:
+    rule: allow
+    port: http
+    proto: tcp
+  notify:
+    - restart ufw
+
+- name: Configure basic HTTPS
+  ufw:
+    rule: allow
+    port: https
+    proto: tcp
+  notify:
+    - restart ufw
+
+- name: Enable collectd port from all IPs
+  ufw: rule=allow from_ip={{ item }} port={{ graphite_port }}
+  with_items: "{{ graphite_allow_ips }}"
+  notify:
+    - restart ufw
+
+- name: Allow grafana port
+  ufw:
+    rule: allow
+    port: 3000
+    proto: tcp
+  notify:
+    - restart ufw

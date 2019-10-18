@@ -1,0 +1,69 @@
+---
+- name: Install prerequisite packages for Graphite
+  apt:
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+      - graphite-web
+      - graphite-carbon
+
+- name: Copy graphite local_settings.py
+  template: src=templates/graphite_local_settings.j2 dest=/etc/graphite/local_settings.py
+
+- name: Migrate graphite DB
+  command: graphite-manage migrate
+
+- name: Migrate graphite DB
+  command: graphite-manage migrate --run-syncdb
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_release == 'bionic'
+
+- name: Migrate graphite DB
+  command: graphite-manage syncdb
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_release == 'xenial'
+
+- name: Copy carbon settings
+  template: src=templates/graphite-carbon.j2 dest=/etc/default/graphite-carbon
+
+- name: Enable log rotation
+  lineinfile:
+    dest: /etc/carbon/storage-schemas.conf
+    regexp: "^ENABLE_LOGROTATION"
+    insertafter: '^#ENABLE_LOGROTATION'
+    line: ENABLE_LOGROTATION = True
+    state: present
+
+- name: Copy storage-schemas settings
+  template: src=templates/storage-schemas.conf.j2 dest=/etc/carbon/storage-schemas.conf
+
+- name: Copy storage-aggregation settings
+  template: src=templates/storage-aggregation.conf.j2 dest=/etc/carbon/storage-aggregation.conf
+  notify:
+    - restart carbon-cache
+
+- name: Fix permission/owner for /var/log/graphite
+  file:
+    dest: /var/log/graphite
+    owner: _graphite
+    group: _graphite
+    mode: u=rwX,g=rX,o=rX
+    recurse: yes
+
+- name: Fix permission/owner for /var/log/carbon
+  file:
+    dest: /var/log/carbon
+    owner: _graphite
+    group: _graphite
+    mode: u=rwX,g=rX,o=rX
+    recurse: yes
+
+- name: Fix permission/owner for /var/log/carbon
+  file:
+    dest: /var/lib/graphite/graphite.db
+    owner: _graphite
+    group: _graphite
+    mode: u=rw,g=rw,o=r
+
+- name: Fix problem with graphite in bionic
+  template: src=templates/graphite_web_fix.py.j2 dest=/usr/lib/python2.7/dist-packages/graphite/views.py
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_release == 'bionic'

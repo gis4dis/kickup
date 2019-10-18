@@ -1,0 +1,10 @@
+---
+
+- name: Install system utilties
+  apt:
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+      - vim
+      - git

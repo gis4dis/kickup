@@ -1,0 +1,26 @@
+---
+
+- name: Add Dokku GPG key
+  apt_key:
+    url: https://packagecloud.io/dokku/dokku/gpgkey
+    state: present
+
+- name: Add Dokku APT repository
+  apt_repository:
+    repo: deb [arch=amd64] https://packagecloud.io/dokku/dokku/{{ansible_distribution|lower}} {{ansible_distribution_release}} main
+    update_cache: yes
+
+- name: Install Dokku
+  apt:
+    name: dokku
+    state: present
+    update_cache: yes
+
+- name: Run Dokku core
+  become: yes
+  command:
+    argv:
+      - dokku
+      - 'plugin:install-dependencies'
+      - '--core'
+  when: dokku_install_core|d(False) == True
